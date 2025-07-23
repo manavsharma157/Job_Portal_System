@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Job Applications for <%= job.title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #f9fafb;
+        }
+
+        .container {
+            max-width: 1100px;
+        }
+
+        h2 {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+
+        p.job-id {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgb(0 0 0 / 0.1);
+        }
+
+        thead {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f5fb;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.6rem;
+            font-weight: 600;
+        }
+
+        .actions form {
+            margin: 0 4px 4px 0;
+        }
+
+        .badge-secondary {
+            background-color: #6c757d !important;
+            font-weight: 600;
+            padding: 0.4em 0.6em;
+            font-size: 0.85rem;
+        }
+
+        .alert-info {
+            max-width: 600px;
+            margin: 2rem auto;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            margin-top: 1.8rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/bootstrap') %>
+        <%- include('partials/navbar.ejs') %>
+
+            <div class="container mt-5">
+                <h2>Applications for Job: <%= job.title %>
+                </h2>
+                <p class="job-id"><strong>Job ID:</strong>
+                    <%= job._id %>
+                </p>
+
+                <% if (applications.length===0) { %>
+                    <div class="alert alert-info text-center">
+                        No applications found for this job by this user.
+                    </div>
+                    <% } else { %>
+                        <div class="table-responsive shadow-sm rounded">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Full Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Phone</th>
+                                        <th scope="col" style="min-width: 200px;">Cover Letter</th>
+                                        <th scope="col">Resume</th>
+                                        <th scope="col">Applied On</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col" style="min-width: 140px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% applications.forEach(app=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= app.fullName %>
+                                            </td>
+                                            <td>
+                                                <%= app.email %>
+                                            </td>
+                                            <td>
+                                                <%= app.phone %>
+                                            </td>
+                                            <td
+                                                style="white-space: pre-wrap; max-width: 250px; overflow-wrap: break-word;">
+                                                <%= app.coverLetter ? app.coverLetter : '—' %>
+                                            </td>
+                                            <td>
+                                                <% if (app.resumeFileName) { %>
+                                                    <a href="/resumes/<%= app.resumeFileName %>" target="_blank"
+                                                        class="text-decoration-none">
+                                                        View Resume
+                                                    </a>
+                                                    <% } else { %>
+                                                        <span class="text-muted">N/A</span>
+                                                        <% } %>
+                                            </td>
+                                            <td>
+                                                <%= new Date(app.appliedAt).toLocaleDateString() %>
+                                            </td>
+                                            <td>
+                                                <strong>
+                                                    <% if(app.status==='Accepted' ) { %>
+                                                        <span class="badge bg-success">Accepted</span>
+                                                        <% } else if(app.status==='Rejected' ) { %>
+                                                            <span class="badge bg-danger">Rejected</span>
+                                                            <% } else { %>
+                                                                <span class="badge bg-warning text-dark">Pending</span>
+                                                                <% } %>
+                                                </strong>
+                                            </td>
+                                            <td class="actions">
+                                                <% if (app.status==='Pending' ) { %>
+                                                    <form action="/updateStatus/<%= app._id %>/<%= job._id %>"
+                                                        method="POST" class="d-inline">
+                                                        <input type="hidden" name="status" value="Accepted" />
+                                                        <button type="submit" class="btn btn-success btn-sm"
+                                                            title="Accept Application">Select</button>
+                                                    </form>
+                                                    <form action="/updateStatus/<%= app._id %>/<%= job._id %>"
+                                                        method="POST" class="d-inline">
+                                                        <input type="hidden" name="status" value="Rejected" />
+                                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                            title="Reject Application">Reject</button>
+                                                    </form>
+                                                    <% } else { %>
+                                                        <span class="badge bg-secondary">
+                                                            <%= app.status %>
+                                                        </span>
+                                                        <% } %>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+
+                            <a href="/backJobPosting/<%= posterId %>" class="btn btn-outline-secondary back-btn">
+                                &larr; Back to My Job Postings
+                            </a>
+            </div>
+</body>
+
+</html>

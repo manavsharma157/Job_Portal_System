@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Application Submitted</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <%- include('partials/bootstrap') %>
+</head>
+
+<body class="bg-light">
+    <%- include('partials/navbar.ejs') %>
+
+        <div class="container mt-5">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-header bg-success text-white py-3 rounded-top-4">
+                    <h3 class="mb-0 text-center">🎉 Application Submitted Successfully!</h3>
+                </div>
+                <div class="card-body p-4">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Name:</strong>
+                            <%= fullName %>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Email:</strong>
+                            <%= email %>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Phone:</strong>
+                            <%= phone %>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Applied for Job:</strong>
+                            <%= jobs[0].title %> at <%= jobs[0].company %>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Message:</strong><br />
+                            <%= coverLetter || "No message provided." %>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Resume:</strong>
+                            <% if (resumeFileName) { %>
+                                <a href="/resumes/<%= resumeFileName %>" download
+                                    class="btn btn-outline-success btn-sm ms-2">
+                                    <%= resumeFileName %> (Download)
+                                </a>
+                                <% } else { %>
+                                    <span class="text-danger ms-2">Not uploaded.</span>
+                                    <% } %>
+                        </li>
+                    </ul>
+
+                    <div class="text-center mt-4">
+                        <a href="/jobPostings/<%= id %>" class="btn btn-primary w-100 rounded-pill">
+                            ← Back to Job Postings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-Up</title>
+</head>
+
+<body>
+    <% if (!alreadyExist) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Congratulations!</strong> Sign-Up Done Successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <% } else { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Oops!</strong> Email Exists!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% } %>
+
+                <%- include('signUp.ejs') %>
+</body>
+
+</html>

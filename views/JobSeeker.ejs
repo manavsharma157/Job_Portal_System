@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hi, <%= fullName %>
+    </title>
+    <%- include('partials/bootstrap') %>
+        <style>
+            body {
+                background-color: #f4f4f4;
+                color: #212529;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .card {
+                border-radius: 15px;
+                transition: transform 0.2s ease-in-out;
+                border: 1px solid #dee2e6;
+                background: linear-gradient(to top right, #ffffff, #f7f9fa);
+            }
+
+            .card:hover {
+                transform: scale(1.02);
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .badge {
+                font-size: 0.85rem;
+            }
+
+            .card-title {
+                color: #0d6efd;
+            }
+
+            .btn-primary {
+                background-color: #0d6efd;
+                border: none;
+            }
+
+            .btn-primary:hover {
+                background-color: #0b5ed7;
+            }
+
+            hr {
+                border-top: 2px solid #6c757d;
+            }
+
+            table th,
+            table td {
+                vertical-align: middle;
+            }
+
+            h2,
+            h3 {
+                color: #343a40;
+            }
+        </style>
+</head>
+
+<body>
+    <%- include('partials/navbar.ejs') %>
+        <div class="container mt-4">
+            <h2 class="mb-4 text-center">Available Job Postings</h2>
+
+            <% if (jobs.length===0) { %>
+                <p class="text-center text-muted">No job postings available right now. Check back later!</p>
+                <% } else { %>
+                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                        <% jobs.forEach(job=> { %>
+                            <div class="col">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <h4 class="card-title">
+                                            <%= job.title %>
+                                        </h4>
+                                        <h6 class="card-subtitle mb-2 text-muted">
+                                            <%= job.company %> - <%= job.location %>
+                                        </h6>
+                                        <p class="card-text">
+                                            <%= job.description %>...
+                                        </p>
+                                        <p>
+                                            <strong>Type:</strong>
+                                            <%= job.type %> |
+                                                <strong>Salary:</strong>
+                                                <%= job.salary || "Not Disclosed" %>
+                                        </p>
+                                        <p>
+                                            <% job.skills.forEach(skill=> { %>
+                                                <span class="badge bg-dark me-1">
+                                                    <%= skill %>
+                                                </span>
+                                                <% }) %>
+                                        </p>
+                                        <p class="text-muted">Apply by: <%= new
+                                                Date(job.applicationDeadline).toLocaleDateString() %>
+                                        </p>
+                                        <form action="/apply/<%= job._id %>/<%= id %>" method="get">
+                                            <button type="submit" class="btn btn-primary">Apply Now</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <% } %>
+
+                        <hr />
+                        <h3 class="mt-5">Jobs You Have Applied To</h3>
+
+                        <% if (userApplications.length===0) { %>
+                            <div class="alert alert-warning mt-3">You haven't applied to any jobs yet.</div>
+                            <% } else { %>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered mt-3">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Job Title</th>
+                                                <th>Company</th>
+                                                <th>Applied On</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% userApplications.forEach(application=> {
+                                                const job = jobs.find(j => String(j._id) === String(application.jobId));
+                                                %>
+                                                <tr>
+                                                    <td>
+                                                        <%= job ? job.title : 'N/A' %>
+                                                    </td>
+                                                    <td>
+                                                        <%= job?.company || 'N/A' %>
+                                                    </td>
+                                                    <td>
+                                                        <%= new Date(application.appliedAt).toLocaleDateString() %>
+                                                    </td>
+                                                    <td>
+                                                        <% if (application.status==="Accepted" ) { %>
+                                                            <span class="badge bg-success">Accepted</span>
+                                                            <% } else if (application.status==="Rejected" ) { %>
+                                                                <span class="badge bg-danger">Rejected</span>
+                                                                <% } else { %>
+                                                                    <span class="badge bg-secondary">Pending</span>
+                                                                    <% } %>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <% } %>
+        </div>
+</body>
+
+</html>

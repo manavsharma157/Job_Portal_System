@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your Job Postings - <%= fullName %>
+    </title>
+    <%- include('partials/bootstrap') %>
+        <style>
+            body {
+                background-color: #f8f9fa;
+                color: #212529;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .job-card {
+                background: linear-gradient(145deg, #ffffff, #f0f0f0);
+                border: 1px solid #ddd;
+                padding: 25px;
+                margin-bottom: 20px;
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s ease;
+            }
+
+            .job-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .job-card h4 {
+                margin-bottom: 12px;
+                color: #0d6efd;
+            }
+
+            .job-card p {
+                margin: 5px 0;
+            }
+
+            .btn-primary {
+                background-color: #0d6efd;
+                border-color: #0d6efd;
+            }
+
+            .btn-primary:hover {
+                background-color: #0b5ed7;
+            }
+
+            .btn-post {
+                background-color: #343a40;
+                color: #fff;
+                padding: 10px 20px;
+                border-radius: 8px;
+                border: none;
+                transition: background-color 0.2s ease;
+            }
+
+            .btn-post:hover {
+                background-color: #212529;
+            }
+
+            h2,
+            h3 {
+                color: #333;
+            }
+
+            .text-muted {
+                font-style: italic;
+            }
+        </style>
+</head>
+
+<body>
+    <%- include('partials/navbar.ejs') %>
+
+        <div class="container mt-5">
+            <h2 class="text-center mb-3">Hello, <%= fullName %> 👋</h2>
+            <h3 class="mb-4">Your Job Postings</h3>
+
+            <% if (jobs.length===0) { %>
+                <p class="text-muted">You haven't posted any jobs yet.</p>
+                <% } else { %>
+                    <% jobs.forEach(job=> { %>
+                        <div class="job-card">
+                            <h4>
+                                <%= job.title %>
+                            </h4>
+                            <p><strong>Description:</strong>
+                                <%= job.description %>
+                            </p>
+                            <p><strong>Company:</strong>
+                                <%= job.company %>
+                            </p>
+                            <p><strong>Location:</strong>
+                                <%= job.location %>
+                            </p>
+                            <p><strong>Salary:</strong>
+                                <%= (!job.salary || job.salary.trim()==='' ) ? "Not Disclosed" : "₹" + job.salary %>
+                            </p>
+                            <form action="/jobApplicationUser/<%= job._id %>/<%= id %>" method="POST" class="mt-2">
+                                <button type="submit" class="btn btn-primary">See Job Applications</button>
+                            </form>
+                        </div>
+                        <% }) %>
+                            <% } %>
+
+                                <div class="text-center mt-4">
+                                    <form action="/postjob/<%= id %>" method="get">
+                                        <button class="btn-post">➕ Add New Job Post</button>
+                                    </form>
+                                </div>
+        </div>
+</body>
+
+</html>
