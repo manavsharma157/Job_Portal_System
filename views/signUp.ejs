@@ -6,57 +6,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign-Up</title>
   <%- include('partials/bootstrap') %>
+  <style>
+    .was-validated .form-control:invalid,
+    .was-validated .form-select:invalid {
+      border-color: #dc3545;
+    }
+
+    .was-validated .form-control:valid,
+    .was-validated .form-select:valid {
+      border-color: #28a745;
+    }
+  </style>
 </head>
 
 <body class="bg-light">
   <%- include('partials/navbar.ejs') %>
 
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
-      <div class="card shadow-lg border-0 p-4 rounded-4 w-100" style="max-width: 500px;">
-        <h3 class="mb-4 text-center text-primary">📝 Create Your Account</h3>
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg border-0 p-4 rounded-4 w-100" style="max-width: 500px;">
+      <h3 class="mb-4 text-center text-primary">📝 Create Your Account</h3>
 
-        <form method="post" action="/signup" novalidate>
-          <div class="mb-3">
-            <label for="fullName" class="form-label">Full Name</label>
-            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Enter your full name"
-              required>
-          </div>
+      <form id="signupForm" method="post" action="/signup" novalidate>
+        <!-- Full Name -->
+        <div class="mb-3">
+          <label for="fullName" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Enter your full name"
+            required>
+          <div class="invalid-feedback">Please enter your full name.</div>
+        </div>
 
-          <div class="mb-3">
-            <label for="emailInput" class="form-label">Email Address</label>
-            <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@example.com"
-              aria-describedby="emailHelp" required>
-            <div id="emailHelp" class="form-text">
-              We'll never share your email with anyone else.
-            </div>
-          </div>
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="emailInput" class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@example.com"
+            aria-describedby="emailHelp" required>
+          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+          <div class="invalid-feedback">Please enter a valid email address.</div>
+        </div>
 
-          <div class="mb-3">
-            <label for="passwordInput" class="form-label">Password</label>
-            <input type="password" class="form-control" id="passwordInput" name="password"
-              placeholder="Enter your password" required>
-          </div>
+        <!-- Password -->
+        <div class="mb-3">
+          <label for="passwordInput" class="form-label">Password</label>
+          <input type="password" class="form-control" id="passwordInput" name="password"
+            placeholder="Enter your password" minlength="6" required>
+          <div class="invalid-feedback">Password must be at least 6 characters long.</div>
+        </div>
 
-          <div class="mb-3">
-            <label for="roleSelect" class="form-label">Select Role</label>
-            <select class="form-select" id="roleSelect" name="role" required>
-              <option value="employee">Job Poster</option>
-              <option value="jobseeker" selected>Job Seeker</option>
-            </select>
-          </div>
+        <!-- Role -->
+        <div class="mb-3">
+          <label for="roleSelect" class="form-label">Select Role</label>
+          <select class="form-select" id="roleSelect" name="role" required>
+            <option value="" disabled selected>Select a role</option>
+            <option value="jobposter">Job Poster</option>
+            <option value="jobseeker">Job Seeker</option>
+          </select>
+          <div class="invalid-feedback">Please select a role.</div>
+        </div>
 
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary rounded-pill">Sign Up</button>
-          </div>
+        <!-- Submit Button -->
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary rounded-pill">Sign Up</button>
+        </div>
 
-          <div class="mt-3 text-center">
-            <small class="text-muted">Already have an account?
-              <a href="/login" class="text-decoration-none">Log in here</a>
-            </small>
-          </div>
-        </form>
-      </div>
+        <!-- Link to Login -->
+        <div class="mt-3 text-center">
+          <small class="text-muted">Already have an account?
+            <a href="/login" class="text-decoration-none">Log in here</a>
+          </small>
+        </div>
+      </form>
     </div>
+  </div>
+
+  <!-- Client-side Validation Script -->
+  <script>
+    const form = document.getElementById('signupForm');
+    form.addEventListener('submit', function (event) {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    });
+  </script>
 </body>
 
 </html>
